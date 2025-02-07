@@ -2,6 +2,10 @@
   "name": "open-mini-app",
   "version": "0.1.0",
   "private": true,
+  "main": "index.js",
+  "repository": "git@github.com:ton-builders/open-mini-app.git",
+  "author": "Andrew",
+  "license": "MIT",
   "scripts": {
     "dev": "next dev --turbopack --experimental-https",
     "build": "next build",
@@ -10,11 +14,13 @@
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.1.2",
+    "@tailwindcss/postcss": "^4.0.4",
     "@tonconnect/ui-react": "^2.0.11",
+    "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.474.0",
-    "next": "15.1.4",
+    "next": "15.1.6",
     "prettier": "^3.4.2",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -27,10 +33,10 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "15.1.4",
-    "postcss": "^8",
-    "tailwindcss": "^3.4.1",
+    "eslint-config-next": "15.1.6",
+    "postcss": "^8.5.1",
+    "tailwindcss": "^4.0.4",
     "typescript": "^5"
   },
-  "packageManager": "pnpm@9.15.2+sha512.93e57b0126f0df74ce6bff29680394c0ba54ec47246b9cf321f0121d8d9bb03f750a705f24edc3c1180853afd7c2c3b94196d0a3d53d3e069d9e2793ef11f321"
+  "packageManager": "yarn@1.22.22"
 }
