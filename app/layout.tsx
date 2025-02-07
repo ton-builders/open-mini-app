@@ -24,17 +24,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-      <html lang="en">
-
+    <html lang="en">
       <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-      <Script
-          src="https://telegram.org/js/telegram-web-app.js?56"
-          strategy="beforeInteractive"
-      />
-      {children}
+        {children}
       </body>
-      </html>
+    </html>
   );
 }
