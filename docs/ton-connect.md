@@ -1,3 +1,14 @@
+
+
+
+# vanilla sdk
+
+https://docs.ton.org/v3/guidelines/ton-connect/frameworks/web
+
+
+
+# react sdk
+
 https://docs.ton.org/v3/guidelines/ton-connect/frameworks/react
 
 
@@ -11,3 +22,6 @@ pnpm add @tonconnect/ui-react
 </TonConnectUIProvider>
 
 ```
+
+
+
