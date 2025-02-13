@@ -1,0 +1,7 @@
+# Ignore artifacts:
+# .prettierignore file to let the Prettier CLI and editors know which files to not format. Here’s an example:
+build
+.next
+coverage
+node_modules
+.idea
