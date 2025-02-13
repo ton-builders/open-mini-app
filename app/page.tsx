@@ -46,28 +46,28 @@ export default function Home() {
         const result = await tonConnect?.sendTransaction(txRequest);
         const cell = Cell.fromBase64(result.boc);
         const hashBuffer = cell.hash();
-        const txIdHex = cell.hash().toString('hex');
-        const txIdBase64 = hashBuffer.toString('base64');
-        console.info(txIdHex); //e.g. 55ce653a1198d44f7d89bb79f817519d785eae53090e70dd2d13a5a2b6c5cfc1
-        console.info(txIdBase64); //e.g. zEHq3S/XsUhCk6ylnZ+Gs3Sg01Fb+4XXLVHzpZyWykI=  Mainnet:IrNcyIG+UpojVPYwrPunpFd7f9N36RpAGBYPWyquODc=
+        const signedTxHashHex = cell.hash().toString('hex');
+        const signedTxHashBase64 = hashBuffer.toString('base64');
+        console.info(signedTxHashHex); //e.g. 55ce653a1198d44f7d89bb79f817519d785eae53090e70dd2d13a5a2b6c5cfc1
+        console.info(signedTxHashBase64); //e.g. zEHq3S/XsUhCk6ylnZ+Gs3Sg01Fb+4XXLVHzpZyWykI=  Mainnet:IrNcyIG+UpojVPYwrPunpFd7f9N36RpAGBYPWyquODc=
 
-        // 浏览器查询 txIdHex
+        // 浏览器查询 signedTxHashHex
         //Testnet tonviewer: https://testnet.tonviewer.com/transaction/55ce653a1198d44f7d89bb79f817519d785eae53090e70dd2d13a5a2b6c5cfc1
         //Mainnet tonviewer: https://tonviewer.com/transaction/0e9a140a236be86bedff69af0df1ecb37f7191e684200e569cb61a5d90eb1f2f
 
         //API
         // 1. tonapi
         // https://tonapi.io/api-v2#operations-Traces-getTrace
-        // 使用 trace_id = txIdHex 进行精准查询
+        // 使用 trace_id = signedTxHashHex 进行精准查询
 
         // 2. TONX API
         // https://docs.tonxapi.com/reference/get-messages
-        // 通过 hash = txIdBase64 进行精准查询
+        // 通过 hash = signedTxHashBase64 进行精准查询
 
         //2. TON API v3
         // https://testnet.toncenter.com/api/v3/index.html#/actions/api_v3_get_traces
         // 使用交易发起方的 account 查询最近交易
-        // 在查询结果中通过 external_hash = txIdBase64 = in_msg_hash 进行过滤
+        // 在查询结果中通过 external_hash = signedTxHashBase64 = in_msg_hash 进行过滤
 
 
 
