@@ -5,9 +5,15 @@ const nextConfig: NextConfig = {
   /* config options here */
 };
 
+console.info("process.env.NODE_ENV");
+console.info(process.env.NODE_ENV);
+console.info(process.env.NODE_ENV);
+console.info(process.env.NODE_ENV);
 if (process.env.NODE_ENV === "development") {
   // allow you to access CF bindings in local development.
-  await setupDevPlatform();
+  (async () => {
+    await setupDevPlatform();
+  })();
 }
 
 export default nextConfig;
