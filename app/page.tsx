@@ -13,7 +13,7 @@ export default function Home() {
 
   useEffect(() => {
     const rawTonConnect = new TonConnectUI({
-      manifestUrl: "https://trc404web.pages.dev/tonconnect-manifest.json",
+      manifestUrl: "https://open-mini-app.pages.dev/tonconnect-manifest.json",
       buttonRootId: "ton-connect",
     });
     setTonConnect(rawTonConnect);
