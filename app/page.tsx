@@ -66,8 +66,7 @@ export default function Home() {
 
     //2. TON API v3
     // https://testnet.toncenter.com/api/v3/index.html#/actions/api_v3_get_traces
-    // 使用交易发起方的 account 查询最近交易
-    // 在查询结果中通过 external_hash = signedTxHashBase64 = in_msg_hash 进行过滤
+    // 通过 msg_hash = signedTxHashHex 进行精准查询
   }
 
   return (
