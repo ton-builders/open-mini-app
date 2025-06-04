@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { TonConnectUI } from "@tonconnect/ui";
 import { Button } from "@/components/ui/button";
@@ -69,6 +70,21 @@ export default function Home() {
     // 通过 msg_hash = extMsgHashHex 进行精准查询, 结果集中字段是 external_hash （external_msg_hash）
   }
 
+  async function checkBalance() {
+    const address = "EQDrjaLahLkMB-hMCmkzOyBuHJ139ZUYmPHu6RRBKnbdLIYI";
+    try {
+      const response = await fetch(
+        `https://ton-api-mcp-server.fly.dev/api/v1/account/${address}`,
+      );
+      const data = await response.json();
+      console.info("钱包余额：", data.balance / 1e9, "TON");
+      alert(`钱包余额：${data.balance / 1e9} TON`);
+    } catch (error) {
+      console.error("查询余额失败：", error);
+      alert("查询余额失败");
+    }
+  }
+
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
@@ -76,11 +92,12 @@ export default function Home() {
         <div>{tonConnect?.account?.address}</div>
         <Button onClick={printTonInfo}>Print TON Connect Info</Button>
         <Button onClick={sendToncoin}>Send Toncoin</Button>
+        <Button onClick={checkBalance}>查询余额</Button>
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
+        <Link
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          href="https://docs.ton.org/v3/guidelines/ton-connect/guidelines/how-ton-connect-works"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -91,11 +108,11 @@ export default function Home() {
             width={16}
             height={16}
           />
-          Learn
-        </a>
-        <a
+          How TON Connect works
+        </Link>
+        <Link
           className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
+          href="https://github.com/ton-blockchain/ton-connect"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -106,23 +123,8 @@ export default function Home() {
             width={16}
             height={16}
           />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+          TON Connect Github
+        </Link>
       </footer>
     </div>
   );
