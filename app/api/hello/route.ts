@@ -5,7 +5,7 @@ export const runtime = "edge";
 export async function GET(request: NextRequest) {
   try {
     // If you did not use `DB` as your binding name, change it here
-    return Response.json({});
+    return Response.json({ request });
   } catch (error) {
     console.info(error);
     return Response.json(error);
