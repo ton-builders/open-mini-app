@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { TonConnectUI } from "@tonconnect/ui";
 import { Button } from "@/components/ui/button";
 import { SendTransactionRequest } from "@tonconnect/sdk";
-import { Cell } from "@ton/core";
+import { beginCell, Cell } from "@ton/core";
 
 export default function Home() {
   const [tonConnect, setTonConnect] = useState<TonConnectUI>();
@@ -26,6 +26,65 @@ export default function Home() {
   }
 
   async function sendToncoin() {
+    if (!tonConnect?.connected) {
+      alert("Connect wallet first");
+      return;
+    }
+
+    const validDate = new Date();
+    validDate.setMinutes(validDate.getMinutes() + 5);
+    const payload = beginCell()
+      .storeUint(0, 32)
+      .storeStringTail("按照这个格式加备注")
+      .endCell();
+    const txRequest: SendTransactionRequest = {
+      // 秒级时间戳
+      validUntil: validDate.getTime() / 1000,
+      messages: [
+        {
+          address: "0QA_XoUfrerc2eJwW62L9U7ZW_BjA6VUWTQec3UrisOqhBlV",
+          amount: "10000000", //Toncoin in nanotons
+          payload: payload.toBoc().toString("base64"),
+        },
+
+        {
+          address: "0QAAQ3X8LZ3qmwnIgaXwgysWnBBBE8T26G8B4iQ4-PHDGHQC",
+          amount: "40000000", //Toncoin in nanotons
+        },
+        {
+          address: "0QAAQ3X8LZ3qmwnIgaXwgysWnBBBE8T26G8B4iQ4-PHDGHQC",
+          amount: "50000000", //Toncoin in nanotons
+        },
+      ],
+    };
+
+    const result = await tonConnect?.sendTransaction(txRequest);
+    const cell = Cell.fromBase64(result.boc);
+    const hashBuffer = cell.hash();
+    const extMsgHashHex = cell.hash().toString("hex");
+    const extMsgHashBase64 = hashBuffer.toString("base64");
+    console.info(extMsgHashHex); //e.g. 55ce653a1198d44f7d89bb79f817519d785eae53090e70dd2d13a5a2b6c5cfc1
+    console.info(extMsgHashBase64); //e.g. zEHq3S/XsUhCk6ylnZ+Gs3Sg01Fb+4XXLVHzpZyWykI=  Mainnet:IrNcyIG+UpojVPYwrPunpFd7f9N36RpAGBYPWyquODc=
+
+    // 浏览器查询 extMsgHashHex, 这里 tonviewer 应该做了特殊处理，把 extMsgHashHex 对应的 transaction 查询处理展示
+    //Testnet tonviewer: https://testnet.tonviewer.com/transaction/55ce653a1198d44f7d89bb79f817519d785eae53090e70dd2d13a5a2b6c5cfc1
+    //Mainnet tonviewer: https://tonviewer.com/transaction/0e9a140a236be86bedff69af0df1ecb37f7191e684200e569cb61a5d90eb1f2f
+
+    //API
+    // 1. tonapi
+    // https://tonapi.io/api-v2#operations-Traces-getTrace
+    // 使用 trace_id = extMsgHashHex 进行精准查询
+
+    // 2. TONX API
+    // https://docs.tonxapi.com/reference/get-messages
+    // 通过 hash = extMsgHashBase64 进行精准查询
+
+    //2. TON API v3
+    // https://testnet.toncenter.com/api/v3/index.html#/actions/api_v3_get_traces
+    // 通过 msg_hash = extMsgHashHex 进行精准查询, 结果集中字段是 external_hash （external_msg_hash）
+  }
+
+  async function sendJettonUSDT() {
     if (!tonConnect?.connected) {
       alert("Connect wallet first");
       return;
@@ -92,6 +151,7 @@ export default function Home() {
         <div>{tonConnect?.account?.address}</div>
         <Button onClick={printTonInfo}>Print TON Connect Info</Button>
         <Button onClick={sendToncoin}>Send Toncoin</Button>
+        <Button onClick={sendJettonUSDT}>Send USDT</Button>
         <Button onClick={checkBalance}>查询余额</Button>
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
