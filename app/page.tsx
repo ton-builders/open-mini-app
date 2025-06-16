@@ -96,6 +96,7 @@ export default function Home() {
     const bodyWithoutComments = beginCell()
       .storeUint(0xf8a7ea5, 32) // jetton transfer op code
       .storeUint(0, 64) // query_id:uint64
+      // toNano("0.006") 表示 6 USDT。因为 USDT 使用 6 位小数精度，而 toNano 函数默认使用 9 位小数精度，
       .storeCoins(toNano("0.006")) // amount:(VarUInteger 16) -  Jetton amount for transfer (decimals = 6 - USDT, 9 - default). Function toNano use decimals = 9 (remember it)
       .storeAddress(Address.parse(Wallet_DST)) // destination:MsgAddress
       .storeAddress(Address.parse(Wallet_SRC)) // response_destination:MsgAddress
@@ -135,6 +136,7 @@ export default function Home() {
     const builder = beginCell()
       .storeUint(0xf8a7ea5, 32) // jetton transfer op code
       .storeUint(0, 64) // query_id:uint64
+      // toNano("0.008") 表示 8 USDT。因为 USDT 使用 6 位小数精度，而 toNano 函数默认使用 9 位小数精度，
       .storeCoins(toNano("0.008")) // amount:(VarUInteger 16) -  Jetton amount for transfer (decimals = 6 - USDT, 9 - default). Function toNano use decimals = 9 (remember it)
       .storeAddress(Address.parse(Wallet_DST)) // destination:MsgAddress
       .storeAddress(Address.parse(Wallet_SRC)) // response_destination:MsgAddress
