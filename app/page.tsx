@@ -84,7 +84,7 @@ export default function Home() {
     // 通过 msg_hash = extMsgHashHex 进行精准查询, 结果集中字段是 external_hash （external_msg_hash）
   }
 
-  async function sendJettonUSDT() {
+  async function sendJetton6USDT_no_comments() {
     if (!tonConnect?.connected) {
       alert("Connect wallet first");
       return;
@@ -93,10 +93,10 @@ export default function Home() {
     const Wallet_DST = "0QA_XoUfrerc2eJwW62L9U7ZW_BjA6VUWTQec3UrisOqhBlV";
     const Wallet_SRC = "0QAAQ3X8LZ3qmwnIgaXwgysWnBBBE8T26G8B4iQ4-PHDGHQC";
 
-    const body = beginCell()
+    const bodyWithoutComments = beginCell()
       .storeUint(0xf8a7ea5, 32) // jetton transfer op code
       .storeUint(0, 64) // query_id:uint64
-      .storeCoins(toNano("0.008")) // amount:(VarUInteger 16) -  Jetton amount for transfer (decimals = 6 - USDT, 9 - default). Function toNano use decimals = 9 (remember it)
+      .storeCoins(toNano("0.006")) // amount:(VarUInteger 16) -  Jetton amount for transfer (decimals = 6 - USDT, 9 - default). Function toNano use decimals = 9 (remember it)
       .storeAddress(Address.parse(Wallet_DST)) // destination:MsgAddress
       .storeAddress(Address.parse(Wallet_SRC)) // response_destination:MsgAddress
       .storeUint(0, 1) // custom_payload:(Maybe ^Cell)
@@ -113,7 +113,66 @@ export default function Home() {
         {
           address: jettonWalletContract, // sender jetton wallet
           amount: toNano("0.9").toString(), // for commission fees, excess will be returned
-          payload: body.toBoc().toString("base64"), // payload with jetton transfer body
+          payload: bodyWithoutComments.toBoc().toString("base64"), // payload with jetton transfer body
+        },
+      ],
+    };
+
+    const result = await tonConnect?.sendTransaction(myTransaction);
+    console.info(result);
+  }
+
+  async function sendJetton8USDT_comments() {
+    if (!tonConnect?.connected) {
+      alert("Connect wallet first");
+      return;
+    }
+
+    const Wallet_DST = "0QA_XoUfrerc2eJwW62L9U7ZW_BjA6VUWTQec3UrisOqhBlV";
+    const Wallet_SRC = "0QAAQ3X8LZ3qmwnIgaXwgysWnBBBE8T26G8B4iQ4-PHDGHQC";
+
+    // ====================选项 1：没有 comments ==============================================
+    // const bodyWithoutComments = beginCell()
+    //   .storeUint(0xf8a7ea5, 32) // jetton transfer op code
+    //   .storeUint(0, 64) // query_id:uint64
+    //   .storeCoins(toNano("0.008")) // amount:(VarUInteger 16) -  Jetton amount for transfer (decimals = 6 - USDT, 9 - default). Function toNano use decimals = 9 (remember it)
+    //   .storeAddress(Address.parse(Wallet_DST)) // destination:MsgAddress
+    //   .storeAddress(Address.parse(Wallet_SRC)) // response_destination:MsgAddress
+    //   .storeUint(0, 1) // custom_payload:(Maybe ^Cell)
+    //   .storeCoins(toNano("0.1")) // forward_ton_amount:(VarUInteger 16) - if >0, will send notification message
+    //   .storeUint(0, 1) // forward_payload:(Either Cell ^Cell)
+    //   .endCell();
+    // ==================================================================
+
+    // ==================选项 2：加上 comments ================================================
+    const builder = beginCell()
+      .storeUint(0xf8a7ea5, 32) // jetton transfer op code
+      .storeUint(0, 64) // query_id:uint64
+      .storeCoins(toNano("0.008")) // amount:(VarUInteger 16) -  Jetton amount for transfer (decimals = 6 - USDT, 9 - default). Function toNano use decimals = 9 (remember it)
+      .storeAddress(Address.parse(Wallet_DST)) // destination:MsgAddress
+      .storeAddress(Address.parse(Wallet_SRC)) // response_destination:MsgAddress
+      .storeUint(0, 1) // custom_payload:(Maybe ^Cell)
+      .storeCoins(toNano("0.1")) // forward_ton_amount:(VarUInteger 16) - if >0, will send notification message
+      .storeUint(0, 1); // forward_payload:(Either Cell ^Cell)
+
+    const commentCell = beginCell()
+      .storeUint(0, 32)
+      .storeStringTail("12345")
+      .endCell();
+    builder.storeBit(true).storeRef(commentCell);
+    // ==================================================================
+
+    const jettonWalletContract =
+      "kQDP4wFEMdUT1BqzReE1iRClDyV-0ezpJBfZZgYMTqe3gsSM";
+
+    const myTransaction = {
+      validUntil: Math.floor(Date.now() / 1000) + 360,
+      messages: [
+        {
+          address: jettonWalletContract, // sender jetton wallet
+          amount: toNano("0.9").toString(), // for commission fees, excess will be returned
+          // payload: bodyWithoutComments.toBoc().toString("base64"), // payload with jetton transfer body
+          payload: builder.endCell().toBoc().toString("base64"), // payload with jetton transfer body
         },
       ],
     };
@@ -155,7 +214,12 @@ export default function Home() {
         <div>{tonConnect?.account?.address}</div>
         <Button onClick={printTonInfo}>Print TON Connect Info</Button>
         <Button onClick={sendToncoin}>Send Toncoin</Button>
-        <Button onClick={sendJettonUSDT}>Send USDT</Button>
+        <Button onClick={sendJetton6USDT_no_comments}>
+          Send 6 USDT 没有 comment{" "}
+        </Button>
+        <Button onClick={sendJetton8USDT_comments}>
+          Send 8 USDT 有 comment 12345
+        </Button>
         <Button onClick={checkBalance}>查询余额</Button>
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
