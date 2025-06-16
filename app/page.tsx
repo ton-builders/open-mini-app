@@ -84,7 +84,7 @@ export default function Home() {
     // 通过 msg_hash = extMsgHashHex 进行精准查询, 结果集中字段是 external_hash （external_msg_hash）
   }
 
-  async function sendJetton6USDT_no_comments() {
+  async function sendJetton6USDT_no_forwaed_payload() {
     if (!tonConnect?.connected) {
       alert("Connect wallet first");
       return;
@@ -122,7 +122,7 @@ export default function Home() {
     console.info(result);
   }
 
-  async function sendJetton8USDT_comments() {
+  async function sendJetton8USDT_with_forward_payload() {
     if (!tonConnect?.connected) {
       alert("Connect wallet first");
       return;
@@ -131,20 +131,7 @@ export default function Home() {
     const Wallet_DST = "0QA_XoUfrerc2eJwW62L9U7ZW_BjA6VUWTQec3UrisOqhBlV";
     const Wallet_SRC = "0QAAQ3X8LZ3qmwnIgaXwgysWnBBBE8T26G8B4iQ4-PHDGHQC";
 
-    // ====================选项 1：没有 comments ==============================================
-    // const bodyWithoutComments = beginCell()
-    //   .storeUint(0xf8a7ea5, 32) // jetton transfer op code
-    //   .storeUint(0, 64) // query_id:uint64
-    //   .storeCoins(toNano("0.008")) // amount:(VarUInteger 16) -  Jetton amount for transfer (decimals = 6 - USDT, 9 - default). Function toNano use decimals = 9 (remember it)
-    //   .storeAddress(Address.parse(Wallet_DST)) // destination:MsgAddress
-    //   .storeAddress(Address.parse(Wallet_SRC)) // response_destination:MsgAddress
-    //   .storeUint(0, 1) // custom_payload:(Maybe ^Cell)
-    //   .storeCoins(toNano("0.1")) // forward_ton_amount:(VarUInteger 16) - if >0, will send notification message
-    //   .storeUint(0, 1) // forward_payload:(Either Cell ^Cell)
-    //   .endCell();
-    // ==================================================================
-
-    // ==================选项 2：加上 comments ================================================
+    // ==================选项 2：加上 forward_payload ================================================
     const builder = beginCell()
       .storeUint(0xf8a7ea5, 32) // jetton transfer op code
       .storeUint(0, 64) // query_id:uint64
@@ -155,11 +142,11 @@ export default function Home() {
       .storeCoins(toNano("0.1")) // forward_ton_amount:(VarUInteger 16) - if >0, will send notification message
       .storeUint(0, 1); // forward_payload:(Either Cell ^Cell)
 
-    const commentCell = beginCell()
+    const fwdPayloadCell = beginCell()
       .storeUint(0, 32)
       .storeStringTail("12345")
       .endCell();
-    builder.storeBit(true).storeRef(commentCell);
+    builder.storeBit(true).storeRef(fwdPayloadCell);
     // ==================================================================
 
     const jettonWalletContract =
@@ -214,11 +201,11 @@ export default function Home() {
         <div>{tonConnect?.account?.address}</div>
         <Button onClick={printTonInfo}>Print TON Connect Info</Button>
         <Button onClick={sendToncoin}>Send Toncoin</Button>
-        <Button onClick={sendJetton6USDT_no_comments}>
-          Send 6 USDT 没有 comment{" "}
+        <Button onClick={sendJetton6USDT_no_forwaed_payload}>
+          Send 6 USDT 没有 Forward Payload
         </Button>
-        <Button onClick={sendJetton8USDT_comments}>
-          Send 8 USDT 有 comment 12345
+        <Button onClick={sendJetton8USDT_with_forward_payload}>
+          Send 8 USDT 有 Forward Payload 12345
         </Button>
         <Button onClick={checkBalance}>查询余额</Button>
       </main>
