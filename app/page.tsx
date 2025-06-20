@@ -170,22 +170,6 @@ export default function Home() {
     console.info(result);
   }
 
-  // MCP  test
-  // async function checkBalance() {
-  //   const address = "EQDrjaLahLkMB-hMCmkzOyBuHJ139ZUYmPHu6RRBKnbdLIYI";
-  //   try {
-  //     const response = await fetch(
-  //       `https://ton-api-mcp-server.fly.dev/api/v1/account/${address}`,
-  //     );
-  //     const data = await response.json();
-  //     console.info("钱包余额：", data.balance / 1e9, "TON");
-  //     alert(`钱包余额：${data.balance / 1e9} TON`);
-  //   } catch (error) {
-  //     console.error("查询余额失败：", error);
-  //     alert("查询余额失败");
-  //   }
-  // }
-
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
@@ -209,7 +193,6 @@ export default function Home() {
         <Button onClick={sendJetton8USDT_with_forward_payload}>
           Send 8 USDT 有 Forward Payload 12345
         </Button>
-        {/*<Button onClick={checkBalance}>查询余额</Button>*/}
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
         <Link
