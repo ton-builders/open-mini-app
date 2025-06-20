@@ -201,7 +201,6 @@ export default function Home() {
           <a href="https://telegram.org/">Telegram Website</a>
         </div>
 
-        <div>{tonConnect?.account?.address}</div>
         <Button onClick={printTonInfo}>Print TON Connect Info</Button>
         <Button onClick={sendToncoin}>Send Toncoin</Button>
         <Button onClick={sendJetton6USDT_no_forwaed_payload}>
